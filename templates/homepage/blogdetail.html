@@ -17,36 +17,46 @@
     <div class="p-6">
       <h1 class="text-3xl font-bold mb-3 text-gray-800">{{ blog.title }}</h1>
       <div class="flex justify-between text-sm text-gray-500 mb-4">
-        <span>By {{ blog.owner.user.username }}</span>
+        <span>By @{{ blog.owner.user.username }}</span>
         <span>{{ blog.created_at|date:"M d, Y" }}</span>
       </div>
       <p class="text-gray-700 leading-relaxed mb-6">{{ blog.description }}</p>
 
       <!-- Like Button -->
+        {% if request.user.is_authenticated %}
       <form action="{% url 'like_blog' blog.link %}" method="POST" class="mb-6">
         {% csrf_token %}
         <button class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-md transition">
-          ❤️ Like {{ blog.likes }}
+          ❤️  {{ blog.likes }}
         </button>
       </form>
-
+        {% else %}
+         ❤️
+        {% endif %}
       <hr class="my-6">
 <!--    share elements-->
   <div class="share-container">
   <button class="share-btn">🔗 Share</button>
   <div class="share-options">
-    <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" target="_blank">Facebook</a>
-    <a href="https://twitter.com/intent/tweet?url={{ share_url }}" target="_blank">Twitter</a>
-    <a href="https://t.me/share/url?url={{ share_url }}" target="_blank">Telegram</a>
-    <a href="https://api.whatsapp.com/send?text={{ share_url }}" target="_blank">WhatsApp</a>
+       <p class="link-copy_text">{{ share_url }}</p>
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ share_url }}" target="_blank" class="fab fa-facebook"></a>
+    <a href="https://twitter.com/intent/tweet?url={{ share_url }}" target="_blank" class="fab fa-whatsapp">Twitter</a>
+    <a href="https://t.me/share/url?url={{ share_url }}" target="_blank" class="fab fa-telegram">Telegram</a>
+    <a href="https://api.whatsapp.com/send?text={{ share_url }}" target="_blank" class="fab fa-whatsapp">WhatsApp</a>
     <button class="copy-btn" onclick="copyShareLink('{{ share_url }}')">Copy Link</button>
+
   </div>
 </div>
 
     <style>
+
+
 .share-container {
   position: relative;
   display: inline-block;
+}
+.link-copy_text {
+font-size: 12px;
 }
 
 .share-btn {
@@ -118,11 +128,13 @@
       </div>
 
       <!-- Add Comment -->
+        {% if request.user.is_authenticated %}
       <form action="{% url 'add_comment' blog.link %}" method="POST" class="mt-6">
         {% csrf_token %}
         <textarea name="comment" rows="1" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-indigo-400" placeholder="Write your comment..."></textarea>
         <button type="submit" class="mt-3 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg">Post Comment</button>
       </form>
+        {% endif %}
     </div>
   </div>
 </article>

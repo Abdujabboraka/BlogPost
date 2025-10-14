@@ -20,9 +20,15 @@ from . import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+#   ADMIN PAGE
     path('admin/', admin.site.urls),
+
+#   HOMEPAGE
     path('homepage/', include('homepage.urls')),
     path('', include('blog.urls')),
+
+#   USER PROFILE
+    path('profile/', include('accounts.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

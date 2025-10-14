@@ -11,9 +11,11 @@
 {% block content %}
 <!-- Include Tailwind -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<div>
 
 
-<section class="max-w-6xl mx-auto py-10 px-4">
+
+  <section class="max-w-6xl mx-auto py-10 px-4">
   <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">Our Latest Blogs</h1>
 
   <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-8">
@@ -39,6 +41,9 @@
     </div>
     {% endfor %}
   </div>
+
 </section>
 
+
+</div>
 {% endblock %}
