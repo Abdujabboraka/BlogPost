@@ -1,1 +1,63 @@
-<h>HI !</h>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
+  <div class="bg-white shadow-2xl rounded-2xl w-full max-w-2xl p-8">
+
+    <div class="text-center mb-8">
+      <img src="{% static 'images/default-avatar.png' %}" alt="Profile"
+           class="w-24 h-24 rounded-full mx-auto border-4 border-blue-500 shadow-md">
+      <h2 class="text-3xl font-bold text-gray-800 mt-4">{{ userprofile.first_name }} {{ userprofile.last_name }}</h2>
+      <p class="text-gray-500 text-sm">{{ userprofile.position|capfirst }}</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <p class="text-sm font-semibold text-gray-500">Username</p>
+        <p class="text-lg text-gray-800">{{ userprofile.username }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-500">Email</p>
+        <p class="text-lg text-gray-800">{{ userprofile.email }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-500">Phone</p>
+        <p class="text-lg text-gray-800">{{ userprofile.country_code }} {{ userprofile.phone }}</p>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-500">Address</p>
+        <p class="text-lg text-gray-800">{{ userprofile.address }}</p>
+      </div>
+    </div>
+
+    <div class="mt-8 flex justify-between items-center">
+      <a href="{% url 'update_profile' %}"
+         class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition duration-300">
+        Edit Profile
+      </a>
+
+      <a href="{% url 'logout_view' %}"
+         class="text-red-600 hover:underline font-semibold">
+        Logout
+      </a>
+    </div>
+
+  </div>
+</div>
+<style>
+  input, select {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    outline: none;
+    transition: border 0.3s, box-shadow 0.3s;
+  }
+  input:focus, select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
+  }
+</style>
+
+{% endblock content %}

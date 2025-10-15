@@ -1,8 +1,10 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import CustomLoginForm, RegisterForm
-from accounts.models import UserProfile
+from accounts.models import UserProfile, User
+
 
 def register_view(request):
     if request.method == 'POST':
@@ -40,3 +42,14 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login_view')
+
+
+@login_required(login_url='login_view')
+def profile(request):
+    user = request.user
+    userprofile = UserProfile.objects.get(user=user)
+    return render(request, 'auth/userprofile.html', {'userprofile': userprofile})
+
+
+def update_profile(request):
+    pass

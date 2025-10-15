@@ -2,12 +2,53 @@
 {% load static %}
 
 {% block content %}
-<h2>Register</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Register</button>
-</form>
-<p><a href="{% url 'login_view' %}">Login</a></p>
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+  <div class="bg-white shadow-2xl rounded-2xl w-full max-w-md p-8">
+    <div class="text-center mb-6">
+      <h2 class="text-3xl font-bold text-gray-800">Create Account</h2>
+      <p class="text-gray-500 text-sm mt-2">Join us and get started</p>
+    </div>
+
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button type="submit" class="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition duration-300">
+        Register
+      </button>
+    </form>
+
+    <div class="text-center mt-6 text-sm text-gray-600">
+      <p>Already have an account?
+        <a href="{% url 'login_view' %}" class="text-green-600 font-medium hover:underline">
+          Login here
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+<style>
+  form p {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  form label {
+    font-weight: 600;
+    color: #374151;
+  }
+  form input {
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    padding: 0.6rem;
+    outline: none;
+    transition: border 0.3s, box-shadow 0.3s;
+  }
+  form input:focus {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16,185,129,0.2);
+  }
+</style>
+
 
 {% endblock content %}

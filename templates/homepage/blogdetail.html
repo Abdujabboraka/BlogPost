@@ -17,8 +17,13 @@
     <div class="p-6">
       <h1 class="text-3xl font-bold mb-3 text-gray-800">{{ blog.title }}</h1>
       <div class="flex justify-between text-sm text-gray-500 mb-4">
+
+          {% if request.user.profile == blog.owner.user %}
+          You
+          {% else %}
         <span>By @{{ blog.owner.user.username }}</span>
-        <span>{{ blog.created_at|date:"M d, Y" }}</span>
+          {% endif %}
+          <span>{{ blog.created_at|date:"M d, Y" }}</span>
       </div>
       <p class="text-gray-700 leading-relaxed mb-6">{{ blog.description }}</p>
 
@@ -123,7 +128,14 @@ font-size: 12px;
       <div class="space-y-4">
         {% for comment in blog.comments.all %}
         <div class="bg-gray-50 p-3 rounded-lg shadow-sm">
-            <small class="text-gray-500"><a class="text-blue-500" href="#"> @{{ comment.user.username }} </a> on {{ comment.created_at|date:"M d, Y" }}</small>
+            <small class="text-gray-500"><a class="text-blue-500" href="#">
+
+                {% if request.user.profile == comment.user %}
+                you
+                {% else %}
+                @{{ comment.user.username }}
+                {% endif %}
+            </a> on {{ comment.created_at|date:"M d, Y" }}</small>
           <p class="text-gray-800">{{ comment.comment }}</p>
         </div>
         {% empty %}
