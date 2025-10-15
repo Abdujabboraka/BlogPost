@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Blog, BlogCategory, BlogLikes, BlogComment
 
 
@@ -7,8 +7,14 @@ from .models import Blog, BlogCategory, BlogLikes, BlogComment
 
 def blog_detail(request, link):
     blog = Blog.objects.get(link=link)
-    user = request.user.profile
-    is_liked = BlogLikes.objects.filter(blog=blog, user=user).exists()
+    # Default value
+    is_liked = False
+
+    # Only check likes if the user is logged in
+    if request.user.is_authenticated:
+        user = request.user.profile
+        is_liked = BlogLikes.objects.filter(blog=blog, user=user).exists()
+
     categories = BlogCategory.objects.all()
     share_url = request.build_absolute_uri()
     comments = BlogComment.objects.filter(blog=blog).order_by('-created_at')
@@ -52,7 +58,7 @@ def add_comment(request, link):
 
 
 def category_detail(request, slug):
-    category = BlogCategory.objects.get(slug=slug)
+    category = get_object_or_404(BlogCategory, slug=slug)
     blogs = Blog.objects.filter(category=category)
     context = {
         'category': category,

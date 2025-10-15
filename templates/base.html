@@ -14,6 +14,99 @@
         {% block category %}
 
         {% endblock %}
+
+<!-- Add Bootstrap CSS if not already included -->
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Menu
+  </button>
+  <ul class="dropdown-menu">
+      {% if not request.user.is_authenticated %}
+    <li><a class="dropdown-item" href="{% url 'login_view' %}">Log In!</a></li>
+    <li><a class="dropdown-item" href="{% url 'register_view' %}">Create an account!</a></li>
+      {% elif request.user.is_authenticated %}
+    <li><a class="dropdown-item" href="{% url 'logout_view' %}">Log out!</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="">Settings</a></li>
+      {% endif %}
+  </ul>
+</div>
+<style>
+    <style>
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown button */
+.dropdown .btn {
+  background-color: #4a4a4a; /* dark gray */
+  color: white;
+  padding: 10px 18px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dropdown .btn:hover {
+  background-color: #333; /* darker on hover */
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 180px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  margin-top: 6px;
+  padding: 8px 0;
+  z-index: 10;
+}
+
+/* Show menu when hovered */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* Dropdown items */
+.dropdown-menu li {
+  list-style: none;
+}
+
+.dropdown-menu a {
+  display: block;
+  color: #333;
+  padding: 10px 16px;
+  text-decoration: none;
+  font-size: 15px;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 6px;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+/* Divider */
+.dropdown-divider {
+  height: 1px;
+  background-color: #e5e5e5;
+  margin: 6px 0;
+  border: none;
+}
+</style>
+
+<!-- Add Bootstrap JS for dropdown functionality -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
     </div>
   </nav>
 

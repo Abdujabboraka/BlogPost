@@ -28,7 +28,8 @@ urlpatterns = [
     path('', include('blog.urls')),
 
 #   USER PROFILE
-    path('profile/', include('accounts.urls')),
+    path('profile/', include('auth.urls')),
+    path('accounts/', include('auth.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

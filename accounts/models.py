@@ -21,7 +21,6 @@ class UserProfile(models.Model):
     last_name = models.CharField(max_length=100)
     username = models.CharField(max_length=100, unique=True, blank=True, null=True)
     email = models.EmailField(max_length=100, unique=True)
-    email = models.EmailField(max_length=150)
     address = models.CharField(max_length=250)
     country_code = models.CharField(max_length=10, choices=[(k, v) for k, v in country_codes.items()], default='Uzb')
     phone = models.IntegerField()
