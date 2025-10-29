@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* Center the card vertically */
+  .profile-update-wrapper {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f8f9fa; /* light gray background */
+  }
+
+  .profile-card {
+    width: 100%;
+    max-width: 480px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    background: #fff;
+  }
+
+  .profile-card-header {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: #fff;
+    text-align: center;
+    padding: 20px 10px;
+  }
+
+  .profile-card-header h4 {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .profile-card-body {
+    padding: 25px;
+  }
+
+  .form-label {
+    font-weight: 500;
+    color: #333;
+  }
+
+  input.form-control {
+    border-radius: 6px;
+    padding: 10px;
+  }
+
+  input.form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.15rem rgba(0,123,255,0.25);
+  }
+
+  .save-btn {
+    width: 100%;
+    padding: 10px;
+    font-weight: 500;
+    border-radius: 6px;
+  }
+
+  @media (max-width: 576px) {
+    .profile-card {
+      margin: 20px;
+    }
+  }
+</style>
+
+<div class="profile-update-wrapper">
+  <div class="profile-card">
+
+    <div class="profile-card-header">
+      <h4>👤 Update Profile</h4>
+    </div>
+
+    <div class="profile-card-body">
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="first_name" class="form-label">First Name</label>
+          <input type="text"
+                 id="first_name"
+                 name="first_name"
+                 class="form-control"
+                 value="{{ user.profile.first_name|default_if_none:'' }}"
+                 placeholder="Enter your first name"
+                 required>
+        </div>
+
+        <div class="mb-3">
+          <label for="last_name" class="form-label">Last Name</label>
+          <input type="text"
+                 id="last_name"
+                 name="last_name"
+                 class="form-control"
+                 value="{{ user.profile.last_name|default_if_none:'' }}"
+                 placeholder="Enter your last name"
+                 required>
+        </div>
+
+        <div class="mb-3">
+          <label for="address" class="form-label">Address</label>
+          <input type="text"
+                 id="address"
+                 name="address"
+                 class="form-control"
+                 value="{{ user.profile.address|default_if_none:'' }}"
+                 placeholder="Enter your address"
+                 required>
+        </div>
+
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text"
+                 id="username"
+                 name="username"
+                 class="form-control"
+                 value="{{ user.username|default_if_none:'' }}"
+                 placeholder="Enter your username"
+                 required>
+        </div>
+
+        <button type="submit" class="btn btn-primary save-btn">
+          💾 Save Changes
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

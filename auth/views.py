@@ -52,4 +52,26 @@ def profile(request):
 
 
 def update_profile(request):
-    pass
+    user = request.user
+    userprofile = UserProfile.objects.get(user=user)
+    context = {
+        'userprofile': userprofile,
+        'user': user,
+    }
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        address = request.POST.get('address')
+        username = request.POST.get('username')
+
+        UserProfile.objects.filter(user=user).update(first_name=first_name,
+                                                     last_name=last_name,
+                                                     address=address,
+                                                     username=username)
+        messages.success(request, "Profile updated successfully!")
+        return redirect('profile_view')
+
+
+
+
+    return render(request, 'auth/update.html', context )

@@ -12,11 +12,28 @@
   <nav class="bg-white shadow-lg py-4">
     <div class="max-w-6xl mx-auto flex justify-between items-center px-4">
       <a href="{% url 'homepage' %}" class="text-2xl font-bold text-indigo-600">BlogHub</a>
-        {% block category %}
 
-        {% endblock %}
+        <div class="category-carusel"> {% block category %} {% endblock %} </div>
+        <style>/* Basic styling for the carousel and its items */
+/* Media query for smaller screens (e.g., mobile devices) */
+@media (max-width: 768px) {
+  . .category-carousel {
+    flex-wrap: nowrap; /* Prevents wrapping, forcing all items onto one line */
+    overflow-x: auto; /* Adds a horizontal scrollbar if needed */
+    -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
+  }
 
-<!-- Add Bootstrap CSS if not already included -->
+  .carousel a {
+    flex-shrink: 0; /* Prevents items from shrinking to fit the container */
+    width: 150px; /* Adjust item width for a better mobile experience */
+  }
+
+  /* Optional: Hide the scrollbar for a cleaner look while keeping the functionality */
+  .category-carousel::-webkit-scrollbar {
+    display: none;
+  }
+}</style>
+<!-- Add Bootstrap CSS if not alrea<stdy included -->
 
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -39,6 +56,7 @@
 .dropdown {
   position: relative;
   display: inline-block;
+  z-index: 10000;
 }
 
 /* Dropdown button */
@@ -51,10 +69,12 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s;
+  z-index: 10000;
 }
 
 .dropdown .btn:hover {
   background-color: #333; /* darker on hover */
+  z-index: 10000;
 }
 
 /* Dropdown menu */
@@ -67,7 +87,7 @@
   border-radius: 8px;
   margin-top: 6px;
   padding: 8px 0;
-  z-index: 10;
+  z-index: 10000;
 }
 
 /* Show menu when hovered */

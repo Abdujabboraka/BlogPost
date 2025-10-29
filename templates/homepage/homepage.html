@@ -1,49 +1,246 @@
 {% extends 'base.html' %}
 {% load static %}
-
-{% block category %}
-{% for cg in categories %}
-<a href="{% url 'category_detail' cg.slug %}" class="hover:text-indigo-500">{{ cg.name }}</a>
-{% endfor %}
-{% endblock %}
-
-
 {% block content %}
-<!-- Include Tailwind -->
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-<div>
+
+<style>
+  /* Layout */
+  .home-layout {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .valyuta, .weather {
+    width: 20%;
+    color: #000;
+   
+  }
+
+.weather img {
+  filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
+}
 
 
+  .card-body {
+ background-color: #007bff;
+ border-radius: 25px;
+ text-align: center;
+  color: #000;
+  }
 
-  <section class="max-w-6xl mx-auto py-10 px-4">
-  <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">Our Latest Blogs</h1>
+  .main-content {
+    width: 60%;
+  }
 
-  <div class="grid md:grid-cols-3 sm:grid-cols-2 gap-8">
-    {% for blog in blogs %}
-    <div class="bg-white shadow-lg rounded-2xl overflow-hidden hover:-translate-y-1 transition duration-300">
-      {% if blog.photo %}
-      <img src="{{ blog.photo.url }}" alt="{{ blog.title }}" class="h-48 w-full object-cover">
-      {% else %}
-      <img src="{% static 'images/default_blog.jpg' %}" alt="default" class="h-48 w-full object-cover">
-      {% endif %}
+  /* --- CATEGORY NAVIGATION --- */
+  .category-nav {
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    padding: 10px 0;
+    margin-bottom: 25px;
+    position: relative; /* adjust based on your navbar height */
+    z-index: 50;
+  }
 
-      <div class="p-5">
-        <span class="text-sm text-indigo-500 uppercase font-semibold">{{ blog.category.name }}</span>
-        <h2 class="text-xl font-bold mt-2 mb-3 text-gray-800 hover:text-indigo-600 transition duration-200">
-          <a href="{% url 'blog_detail' blog.link %}">{{ blog.title }}</a>
-        </h2>
-        <p class="text-gray-600 text-sm line-clamp-3">{{ blog.description|truncatewords:20 }}</p>
-        <div class="flex justify-between items-center mt-4 text-gray-500 text-sm">
-          <span>👤 {{ blog.owner.user.username }}</span>
-          <span>❤️ {{ blog.likes }}</span>
-        </div>
-      </div>
-    </div>
+  .category-nav .container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .category-link {
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 20px;
+    color: #555;
+    background: #f7f7f7;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+
+  .category-link:hover {
+    background: #007bff;
+    color: #fff;
+  }
+
+  .category-link.active {
+    background: #007bff;
+    color: #fff;
+  }
+
+  /* Blog Cards */
+  .blog-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.05);
+    overflow: hidden;
+    transition: transform 0.2s ease;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .blog-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .blog-card-body {
+    padding: 15px;
+  }
+
+  .blog-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .blog-meta {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 10px;
+  }
+
+  .like-btn {
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    background: transparent;
+    border-radius: 4px;
+    padding: 2px 8px;
+  }
+
+  .like-btn:hover {
+    background: #dc3545;
+    color: #fff;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .home-layout {
+      flex-direction: column;
+    }
+    .valyuta, .weather, .main-content {
+      width: 100%;
+    }
+    .category-nav .container {
+      justify-content: flex-start;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+  }
+</style>
+
+
+<!-- 🟦 CATEGORY NAVIGATION BAR -->
+<div class="category-nav">
+  <div class="container">
+    <a href="{% url 'homepage' %}" 
+       class="category-link {% if not current_category %}active{% endif %}">
+       All
+    </a>
+    {% for cat in categories %}
+      <a href="{% url 'category_detail' slug=cat.slug %}" 
+         class="category-link {% if current_category and current_category.slug == cat.slug %}active{% endif %}">
+        {{ cat.name }}
+      </a>
     {% endfor %}
   </div>
+</div>
 
-</section>
 
+<div class="container mt-4 home-layout">
+
+  <!-- LEFT COLUMN: Valyuta -->
+  <div class="valyuta">
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-blue text-black text-center">
+        💱 <strong>Valyuta</strong>
+      </div>
+      <div class="card-body">
+        <p>USD: {{ dollar }} UZS</p>
+        <p>RUB: {{ ruble }} UZS</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER COLUMN: Blogs -->
+  <div class="main-content">
+    <h3 class="mb-4 text-center">📰 Latest Blogs</h3>
+
+    <div class="row">
+      {% for blog in blogs %}
+        <div class="col-md-6 mb-4">
+          <div class="blog-card">
+            {% if blog.photo %}
+              <img src="{{ blog.photo.url }}" alt="{{ blog.title }}">
+            {% else %}
+              <img src="{% static 'images/default-blog.jpg' %}" alt="No image">
+            {% endif %}
+            <div class="blog-card-body">
+              <h5 class="blog-card-title">{{ blog.title }}</h5>
+              <p class="blog-meta">
+                By {{ blog.owner.user.username }} • {{ blog.created_at|date:"M d, Y" }}
+              </p>
+              <p>{{ blog.description|truncatewords:25 }}</p>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <a href="{% url 'blog_detail' link=blog.link %}" class="btn btn-primary btn-sm">
+                  Read More
+                </a>
+                <form action="{% url 'like_blog' link=blog.link %}" method="post">
+                  {% csrf_token %}
+                  <button class="like-btn btn-sm">❤️ {{ blog.likes }}</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-center text-muted">No blogs available yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+ <!-- RIGHT COLUMN: Weather -->
+<div class="weather">
+  <div class="card shadow-sm">
+    <div class="card-header bg-info text-black text-center">
+      🌤 <strong>Weather</strong>
+    </div>
+    <div class="card-body text-center">
+
+      <!-- City & Country -->
+      <h5 class="mb-1">
+        <strong>{{ weather.city }}</strong>, {{ weather.country }}
+      </h5>
+
+      <!-- Weather Icon -->
+      {% if weather.icon %}
+        <img src="{{ weather.icon }}" alt="{{ weather.condition }}" style="width:60px;">
+      {% endif %}
+
+      <!-- Temperature -->
+      <h3 class="my-2">{{ weather.temp_c }}°C</h3>
+
+      <!-- Condition -->
+      <p class="mb-2">
+        {{ weather.condition }}
+      </p>
+
+      <!-- Extra Info -->
+      <div class="d-flex justify-content-around mt-3 small text-muted">
+        <span>💨 {{ weather.wind_kph }} km/h</span>
+        <span>💧 {{ weather.humidity }}%</span>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 </div>
+
 {% endblock %}
