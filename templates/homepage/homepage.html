@@ -1,5 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
+
+
+<!-- 🟦 CATEGORY NAVIGATION BAR -->
+<div class="category">
+{% block category %}
+    {% for cat in categories %}
+      <a href="{% url 'category_detail' slug=cat.slug %}"
+         class="category-link {% if current_category and current_category.slug == cat.slug %}active{% endif %}">
+        {{ cat.name }}
+      </a>
+    {% endfor %}
+{% endblock %}
+</div>
+
+
+
 {% block content %}
 
 <style>
@@ -13,8 +29,11 @@
   .valyuta, .weather {
     width: 20%;
     color: #000;
-   
+
   }
+  .weather {
+
+ }
 
 .weather img {
   filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.2));
@@ -22,53 +41,17 @@
 
 
   .card-body {
- background-color: #007bff;
- border-radius: 25px;
+ border-radius: 15px;
  text-align: center;
-  color: #000;
-  }
+ background-image: url("{% static 'weather/weather.jpg' %}");
+color: white;
+  font-size: 25px;}
 
   .main-content {
     width: 60%;
   }
 
-  /* --- CATEGORY NAVIGATION --- */
-  .category-nav {
-    background: #ffffff;
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    padding: 10px 0;
-    margin-bottom: 25px;
-    position: relative; /* adjust based on your navbar height */
-    z-index: 50;
-  }
 
-  .category-nav .container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-
-  .category-link {
-    text-decoration: none;
-    padding: 6px 14px;
-    border-radius: 20px;
-    color: #555;
-    background: #f7f7f7;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
-  }
-
-  .category-link:hover {
-    background: #007bff;
-    color: #fff;
-  }
-
-  .category-link.active {
-    background: #007bff;
-    color: #fff;
-  }
 
   /* Blog Cards */
   .blog-card {
@@ -82,6 +65,33 @@
   .blog-card:hover {
     transform: translateY(-4px);
   }
+
+
+
+.inner-top5{
+margin: 5px;
+padding: 5px;
+border-radius: 7px;
+border: none;
+border-top: 2px solid;
+ transition: all 0.5s ease;
+}
+
+.inner-top5:hover {
+background-color: white;
+border: 2px solid;
+transform: scale(1.01);
+}
+
+.inner-top5 h2 {
+font-size: 20px;
+font-weight: bold;
+color: blue;
+}
+
+.inner-top5 h2:hover {
+color: darkblue;
+}
 
   .blog-card img {
     width: 100%;
@@ -135,23 +145,6 @@
 </style>
 
 
-<!-- 🟦 CATEGORY NAVIGATION BAR -->
-<div class="category-nav">
-  <div class="container">
-    <a href="{% url 'homepage' %}" 
-       class="category-link {% if not current_category %}active{% endif %}">
-       All
-    </a>
-    {% for cat in categories %}
-      <a href="{% url 'category_detail' slug=cat.slug %}" 
-         class="category-link {% if current_category and current_category.slug == cat.slug %}active{% endif %}">
-        {{ cat.name }}
-      </a>
-    {% endfor %}
-  </div>
-</div>
-
-
 <div class="container mt-4 home-layout">
 
   <!-- LEFT COLUMN: Valyuta -->
@@ -164,17 +157,38 @@
         <p>USD: {{ dollar }} UZS</p>
         <p>RUB: {{ ruble }} UZS</p>
       </div>
+
+
+        <h1 align="center" style="font-weight: bold;">Popular Blogs!</h1>
+               {% for bg in top5 %}
+            <a href="{% url 'blog_detail' link=bg.link %}"> <div class="inner-top5">
+          <h2>{{ bg.title }}</h2>
+          <p>{{ bg.description|truncatewords:20 }}</p>
+            </div>
+            </a>
+          {% endfor %}
+
     </div>
   </div>
 
+
+
+
+
+
   <!-- CENTER COLUMN: Blogs -->
   <div class="main-content">
-    <h3 class="mb-4 text-center">📰 Latest Blogs</h3>
+    <h3 class="mb-4  text-center" style="font-size: 30px;
+                                         letter-spacing: 5px;
+                                         font-weight: bold;
+                                         background-color: white;
+                                         border-radius: 15px;
+                                         ">BlogHub Community</h3>
 
     <div class="row">
       {% for blog in blogs %}
         <div class="col-md-6 mb-4">
-          <div class="blog-card">
+         <a href="{% url 'blog_detail' link=blog.link %}"> <div class="blog-card">
             {% if blog.photo %}
               <img src="{{ blog.photo.url }}" alt="{{ blog.title }}">
             {% else %}
@@ -197,7 +211,7 @@
                 </form>
               </div>
             </div>
-          </div>
+          </div> </a>
         </div>
       {% empty %}
         <p class="text-center text-muted">No blogs available yet.</p>
@@ -207,7 +221,7 @@
 
  <!-- RIGHT COLUMN: Weather -->
 <div class="weather">
-  <div class="card shadow-sm">
+  <div class="card shadow-sm" id="weatherid">
     <div class="card-header bg-info text-black text-center">
       🌤 <strong>Weather</strong>
     </div>
@@ -235,12 +249,23 @@
       <div class="d-flex justify-content-around mt-3 small text-muted">
         <span>💨 {{ weather.wind_kph }} km/h</span>
         <span>💧 {{ weather.humidity }}%</span>
-      </div>
 
-    </div>
+
+
   </div>
+
 </div>
 
+</div>
+    <h1 align="center" style="font-weight: bold;">Blogs you might like!</h1>
+               {% for bg in random_blogs %}
+            <a href="{% url 'blog_detail' link=bg.link %}"> <div class="inner-top5">
+          <h2>{{ bg.title }}</h2>
+          <p>{{ bg.description|truncatewords:20 }}</p>
+            </div>
+            </a>
+          {% endfor %}
+</div>
 </div>
 
 {% endblock %}

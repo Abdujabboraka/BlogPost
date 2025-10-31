@@ -66,3 +66,5 @@ def category_detail(request, slug):
         'categories': BlogCategory.objects.all(),
     }
     return render(request, 'category.html', context)
+
+

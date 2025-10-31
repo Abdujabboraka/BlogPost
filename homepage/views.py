@@ -1,14 +1,18 @@
 from django.shortcuts import render
 from blog.models import BlogCategory, Blog
 import requests
+from django.db.models import Count
 # Create your views here.
 
 url = 'https://cbu.uz/uz/arkhiv-kursov-valyut/json/'
-response = requests.get(url)
-data = response.json()
-dollar = data[0]['Rate']
-ruble = data[1]['Rate']
-
+try:
+    response = requests.get(url)
+    data = response.json()
+    dollar = data[0]['Rate']
+    ruble = data[1]['Rate']
+except:
+    dollar = 0
+    ruble = 0
 
 # weather/utils.py
 import requests
@@ -43,7 +47,10 @@ def get_weather(city_name):
         print("Error fetching weather:", e)
         return None
 
-# need to send weather data to template
+# getting top five blogs
+top5 = Blog.objects.annotate(likescount=Count('likes')).order_by('-likes')[:5]
+random_blogs = Blog.objects.annotate(likescount=Count('likes')).order_by('likes')[:5]
+
 def homepage(request):
     categories = BlogCategory.objects.all()
     blogs = Blog.objects.all()
@@ -56,6 +63,8 @@ def homepage(request):
         'weather': weather,
         'categories': categories,
         'blogs': blogs,
+        'top5' : top5,
+        'random_blogs': random_blogs
 
     }
     return render(request, 'homepage/homepage.html', context)
